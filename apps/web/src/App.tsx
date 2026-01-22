@@ -6,6 +6,8 @@ import Landing from './pages/Landing';
 import Passport from './pages/Passport';
 import VisitorScan from './pages/VisitorScan';
 import Demo from './pages/Demo';
+import DemoQR from './pages/DemoQR';
+import Celebrate from './pages/Celebrate';
 
 // Booth pages
 import BoothLookup from './pages/booth/BoothLookup';
@@ -50,6 +52,36 @@ function ProtectedRoute({
   return <>{children}</>;
 }
 
+// Mode indicator bar
+function ModeBar() {
+  const { user, role } = useAuth();
+  const location = window.location.pathname;
+
+  if (!user) return null;
+
+  const isBooth = location.startsWith('/booth');
+  const isAdmin = location.startsWith('/admin');
+
+  if (!isBooth && !isAdmin) return null;
+
+  return (
+    <div
+      style={{
+        background: isBooth ? 'var(--color-booth)' : 'var(--color-admin)',
+        color: 'white',
+        padding: 'var(--space-xs) var(--space-md)',
+        fontSize: '0.75rem',
+        fontWeight: 600,
+        textAlign: 'center',
+        textTransform: 'uppercase',
+        letterSpacing: '1px',
+      }}
+    >
+      {isBooth ? '📋 Booth Mode' : '⚙️ Admin Mode'}
+    </div>
+  );
+}
+
 export default function App() {
   const { loading } = useAuth();
 
@@ -57,12 +89,23 @@ export default function App() {
     return <LoadingScreen />;
   }
 
+  // Determine mode for CSS class
+  const path = window.location.pathname;
+  const modeClass = path.startsWith('/booth')
+    ? 'mode-booth'
+    : path.startsWith('/admin')
+    ? 'mode-admin'
+    : 'mode-visitor';
+
   return (
-    <div className="app">
+    <div className={`app ${modeClass}`}>
+      <ModeBar />
       <Routes>
         {/* Public */}
         <Route path="/" element={<Landing />} />
         <Route path="/demo" element={<Demo />} />
+        <Route path="/demo-qr" element={<DemoQR />} />
+        <Route path="/celebrate/:visitCount" element={<Celebrate />} />
 
         {/* Visitor (requires auth) */}
         <Route

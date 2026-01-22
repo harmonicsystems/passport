@@ -181,22 +181,59 @@ export default function Passport() {
           Show My QR (for booth)
         </button>
 
-        {(role === 'staff' || role === 'admin') && (
-          <Link to="/booth" className="btn btn-secondary">
-            Booth Mode
-          </Link>
-        )}
-
-        {role === 'admin' && (
-          <Link to="/admin" className="btn btn-secondary">
-            Admin
-          </Link>
-        )}
-
-        <button className="btn btn-secondary" onClick={signOut}>
-          Sign Out
-        </button>
+        <Link to="/demo-qr" className="btn btn-secondary">
+          Demo Celebrations
+        </Link>
       </div>
+
+      {/* Mode switcher for staff/admin */}
+      {(role === 'staff' || role === 'admin') && (
+        <div style={{ marginTop: 'var(--space-xl)' }}>
+          <div className="text-muted" style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: 'var(--space-sm)' }}>
+            Switch Mode
+          </div>
+          <div style={{ display: 'flex', gap: 'var(--space-sm)' }}>
+            <Link
+              to="/booth"
+              style={{
+                flex: 1,
+                padding: 'var(--space-md)',
+                background: '#2c5282',
+                color: 'white',
+                borderRadius: 'var(--radius-md)',
+                textAlign: 'center',
+                textDecoration: 'none',
+                fontWeight: 500,
+                fontSize: '0.875rem',
+              }}
+            >
+              📋 Booth
+            </Link>
+            {role === 'admin' && (
+              <Link
+                to="/admin"
+                style={{
+                  flex: 1,
+                  padding: 'var(--space-md)',
+                  background: '#744210',
+                  color: 'white',
+                  borderRadius: 'var(--radius-md)',
+                  textAlign: 'center',
+                  textDecoration: 'none',
+                  fontWeight: 500,
+                  fontSize: '0.875rem',
+                }}
+              >
+                ⚙️ Admin
+              </Link>
+            )}
+          </div>
+        </div>
+      )}
+
+      <button className="btn btn-secondary" style={{ marginTop: 'var(--space-lg)' }} onClick={signOut}>
+        Sign Out
+      </button>
     </div>
   );
 }

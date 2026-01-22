@@ -1,5 +1,5 @@
 :root {
-  /* Warm, local market colors */
+  /* Warm, local market colors (visitor default) */
   --color-cream: #faf9f6;
   --color-warm-white: #f5f3ef;
   --color-sage: #4a7c59;
@@ -11,6 +11,10 @@
   --color-border: #e0dcd4;
   --color-error: #c44536;
   --color-success: #4a7c59;
+
+  /* Mode-specific accent colors */
+  --color-booth: #2c5282;
+  --color-admin: #744210;
 
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     sans-serif;
@@ -196,4 +200,48 @@ body {
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mode: Booth - blue tones, professional feel */
+.mode-booth {
+  --color-sage: #2c5282;
+  --color-sage-light: #4a7ab5;
+  --color-cream: #f0f4f8;
+  --color-warm-white: #e8eef4;
+  --color-border: #cbd5e0;
+  background: var(--color-cream);
+}
+
+.mode-booth .page-title {
+  color: #2c5282;
+}
+
+.mode-booth .btn-primary {
+  background: #2c5282;
+}
+
+.mode-booth .btn-primary:hover {
+  background: #4a7ab5;
+}
+
+/* Mode: Admin - warm amber tones */
+.mode-admin {
+  --color-sage: #744210;
+  --color-sage-light: #975a16;
+  --color-cream: #fffaf0;
+  --color-warm-white: #fef5e7;
+  --color-border: #e8d5b7;
+  background: var(--color-cream);
+}
+
+.mode-admin .page-title {
+  color: #744210;
+}
+
+.mode-admin .btn-primary {
+  background: #744210;
+}
+
+.mode-admin .btn-primary:hover {
+  background: #975a16;
 }
