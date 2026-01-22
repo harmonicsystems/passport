@@ -54,7 +54,8 @@ export default function DemoQR() {
 
   // Build the URL that the phone will open when scanning
   const getQRUrl = (scenario: typeof DEMO_SCENARIOS[0]) => {
-    const base = window.location.origin + (import.meta.env.BASE_URL || '/');
+    const baseUrl = import.meta.env.BASE_URL || '/';
+    const base = window.location.origin + baseUrl;
     const visitCount = scenario.visitCount === 0
       ? Math.floor(Math.random() * 12) + 1
       : scenario.visitCount;

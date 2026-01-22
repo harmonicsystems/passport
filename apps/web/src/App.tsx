@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 
 // Visitor pages
@@ -54,13 +54,13 @@ function ProtectedRoute({
 
 // Mode indicator bar
 function ModeBar() {
-  const { user, role } = useAuth();
-  const location = window.location.pathname;
+  const { user } = useAuth();
+  const { pathname } = useLocation();
 
   if (!user) return null;
 
-  const isBooth = location.startsWith('/booth');
-  const isAdmin = location.startsWith('/admin');
+  const isBooth = pathname.startsWith('/booth');
+  const isAdmin = pathname.startsWith('/admin');
 
   if (!isBooth && !isAdmin) return null;
 
@@ -90,10 +90,10 @@ export default function App() {
   }
 
   // Determine mode for CSS class
-  const path = window.location.pathname;
-  const modeClass = path.startsWith('/booth')
+  const { pathname } = useLocation();
+  const modeClass = pathname.startsWith('/booth')
     ? 'mode-booth'
-    : path.startsWith('/admin')
+    : pathname.startsWith('/admin')
     ? 'mode-admin'
     : 'mode-visitor';
 
