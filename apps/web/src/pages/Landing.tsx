@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useEffect } from 'react';
 
@@ -9,14 +9,9 @@ export default function Landing() {
   // Redirect if already signed in
   useEffect(() => {
     if (user) {
-      // Staff/admin go to booth, visitors go to passport
-      if (role === 'staff' || role === 'admin') {
-        navigate('/booth');
-      } else {
-        navigate('/passport');
-      }
+      navigate('/passport');
     }
-  }, [user, role, navigate]);
+  }, [user, navigate]);
 
   const handleSignIn = async () => {
     try {
@@ -37,11 +32,15 @@ export default function Landing() {
         <button className="btn btn-primary btn-large" onClick={handleSignIn}>
           Sign in with Google
         </button>
+
+        <Link to="/demo" className="btn btn-secondary btn-large">
+          See Demo Garden
+        </Link>
       </div>
 
       <footer className="text-center text-muted" style={{ marginTop: 'var(--space-xl)' }}>
         <p style={{ fontSize: '0.875rem' }}>
-          Visit the check-in booth after shopping to grow your garden.
+          Scan the market QR code to grow your garden
         </p>
       </footer>
     </div>

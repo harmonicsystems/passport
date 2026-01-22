@@ -4,6 +4,8 @@ import { useAuth } from './hooks/useAuth';
 // Visitor pages
 import Landing from './pages/Landing';
 import Passport from './pages/Passport';
+import VisitorScan from './pages/VisitorScan';
+import Demo from './pages/Demo';
 
 // Booth pages
 import BoothLookup from './pages/booth/BoothLookup';
@@ -60,6 +62,7 @@ export default function App() {
       <Routes>
         {/* Public */}
         <Route path="/" element={<Landing />} />
+        <Route path="/demo" element={<Demo />} />
 
         {/* Visitor (requires auth) */}
         <Route
@@ -67,6 +70,14 @@ export default function App() {
           element={
             <ProtectedRoute allowedRoles={['visitor', 'staff', 'admin']}>
               <Passport />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/scan"
+          element={
+            <ProtectedRoute allowedRoles={['visitor', 'staff', 'admin']}>
+              <VisitorScan />
             </ProtectedRoute>
           }
         />

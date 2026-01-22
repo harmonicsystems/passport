@@ -173,8 +173,12 @@ export default function Passport() {
 
       {/* Actions */}
       <div className="stack">
-        <button className="btn btn-primary btn-large" onClick={() => setShowQR(true)}>
-          Show Check-in QR
+        <Link to="/scan" className="btn btn-primary btn-large">
+          Scan Market Code
+        </Link>
+
+        <button className="btn btn-secondary btn-large" onClick={() => setShowQR(true)}>
+          Show My QR (for booth)
         </button>
 
         {(role === 'staff' || role === 'admin') && (
