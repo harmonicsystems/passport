@@ -1,0 +1,17 @@
+{
+  "name": "market-passport",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Farmers' market check-in PWA",
+  "scripts": {
+    "dev": "pnpm --filter @market-passport/web dev",
+    "build": "pnpm --filter @market-passport/web build",
+    "build:shared": "pnpm --filter @market-passport/shared build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "clean": "pnpm -r clean"
+  },
+  "keywords": ["farmers-market", "pwa", "check-in"],
+  "author": "David Nyman",
+  "license": "UNLICENSED"
+}

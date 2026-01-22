@@ -1,0 +1,88 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: Check if user is authenticated
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Helper: Check if user is admin
+    function isAdmin() {
+      return isSignedIn() &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.token.email.lower()));
+    }
+
+    // Helper: Check if user is staff
+    function isStaff() {
+      return isSignedIn() &&
+        exists(/databases/$(database)/documents/staff/$(request.auth.token.email.lower()));
+    }
+
+    // Helper: Check if user is staff or admin
+    function isOperator() {
+      return isAdmin() || isStaff();
+    }
+
+    // Helper: Check if user owns the document
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Markets: read-only for everyone, write for admins
+    match /markets/{marketId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Seasons: read-only for everyone, write for admins
+    match /seasons/{seasonId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Event days: read-only for everyone, write for admins
+    match /eventDays/{eventDayId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Check-ins:
+    // - Users can read their own
+    // - Staff/admins can read all and create new
+    match /checkIns/{checkInId} {
+      allow read: if isOwner(resource.data.userId) || isOperator();
+      allow create: if isOperator();
+      allow update, delete: if isAdmin();
+    }
+
+    // User rewards: users can read their own, operators can read/write
+    match /userRewards/{rewardId} {
+      allow read: if isOwner(resource.data.userId) || isOperator();
+      allow write: if isOperator();
+    }
+
+    // Admins collection: only admins can read/write
+    match /admins/{email} {
+      allow read: if isAdmin() || (isSignedIn() && request.auth.token.email.lower() == email);
+      allow write: if isAdmin();
+    }
+
+    // Staff collection: admins can manage, staff can read their own
+    match /staff/{email} {
+      allow read: if isAdmin() || (isSignedIn() && request.auth.token.email.lower() == email);
+      allow write: if isAdmin();
+    }
+
+    // Users:
+    // - Users can read/write their own profile
+    // - Staff/admins can read all users (for lookup)
+    // - Staff/admins can update user garden state (for check-in)
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isOperator();
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId) || isOperator();
+      allow delete: if false;
+    }
+  }
+}
