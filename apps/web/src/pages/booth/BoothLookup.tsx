@@ -19,12 +19,12 @@ export default function BoothLookup() {
     if (!scanMode) return;
 
     let stream: MediaStream | null = null;
-    let reader: any = null;
+    let controls: any = null;
 
     async function startScanner() {
       try {
         const { BrowserQRCodeReader } = await import('@zxing/browser');
-        reader = new BrowserQRCodeReader();
+        const reader = new BrowserQRCodeReader();
 
         stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: 'environment' },
@@ -33,12 +33,10 @@ export default function BoothLookup() {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
 
-          // Start decoding
-          reader.decodeFromVideoElement(videoRef.current, (result: any) => {
+          controls = await reader.decodeFromVideoElement(videoRef.current, (result: any) => {
             if (result) {
               const userId = result.getText();
               if (userId && userId.length > 10) {
-                // Looks like a Firebase UID
                 navigate(`/booth/checkin/${userId}`);
               }
             }
@@ -53,11 +51,11 @@ export default function BoothLookup() {
     startScanner();
 
     return () => {
+      if (controls && controls.stop) {
+        controls.stop();
+      }
       if (stream) {
         stream.getTracks().forEach((track) => track.stop());
-      }
-      if (reader) {
-        reader.reset();
       }
     };
   }, [scanMode, navigate]);

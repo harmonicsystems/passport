@@ -41,13 +41,13 @@ export default function VisitorScan() {
     if (state !== 'scanning') return;
 
     let stream: MediaStream | null = null;
-    let reader: any = null;
+    let controls: any = null;
     let stopped = false;
 
     async function startScanner() {
       try {
         const { BrowserQRCodeReader } = await import('@zxing/browser');
-        reader = new BrowserQRCodeReader();
+        const reader = new BrowserQRCodeReader();
 
         stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: 'environment' },
@@ -56,10 +56,9 @@ export default function VisitorScan() {
         if (videoRef.current && !stopped) {
           videoRef.current.srcObject = stream;
 
-          reader.decodeFromVideoElement(videoRef.current, (result: any) => {
+          controls = await reader.decodeFromVideoElement(videoRef.current, (result: any) => {
             if (result && !stopped) {
               const text = result.getText();
-              // Check if it's a market passport QR
               if (text.startsWith('mp1:')) {
                 stopped = true;
                 handleScan(text);
@@ -77,11 +76,11 @@ export default function VisitorScan() {
 
     return () => {
       stopped = true;
+      if (controls && controls.stop) {
+        controls.stop();
+      }
       if (stream) {
         stream.getTracks().forEach((track) => track.stop());
-      }
-      if (reader) {
-        reader.reset();
       }
     };
   }, [state]);
