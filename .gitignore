@@ -3,7 +3,8 @@ node_modules/
 
 # Build outputs
 dist/
-lib/
+**/lib/
+!**/src/lib/
 *.tsbuildinfo
 
 # Environment
